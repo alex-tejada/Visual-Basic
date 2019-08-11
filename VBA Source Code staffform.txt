@@ -1,0 +1,164 @@
+Private Sub ComboBox1_Change()
+    
+End Sub
+
+Private Sub Frame1_Click()
+
+End Sub
+
+Private Sub ListBox1_Click()
+    Dim selectedText As String
+    For i = 0 To ListBox1.ListCount - 1
+        If ListBox1.Selected(i) = True Then
+            selectedText = ListBox1.List(i)
+        End If
+    Next i
+    
+    Dim searchKey As String
+    Dim resultString As String
+    Dim ID As String
+    searchKey = selectedText
+    Dim RNG As Range
+    Dim aCell As Range
+    Dim shift As String
+    
+        ListBox2.Clear 'set the range to be the second column of the table
+        Set RNG = Sheets("Main Time Table").ListObjects("Table1").ListColumns("Num Reloj").DataBodyRange
+        For Each aCell In RNG.Cells
+                result = Split(aCell.Address, "$")
+                For Each wrd In result
+                    resultString = wrd
+                Next wrd
+                
+                ID = Range("A" & resultString).Value
+                
+                If InStr(ID, searchKey) > 0 Then
+                
+                        Dim Chasis As String
+                        Dim USBVGA As String
+                        Dim MLB As String
+                        Dim CPU As String
+                        Dim TPM As String
+                        Dim DIMM As String
+                        Dim PCI As String
+                        Dim FAN As String
+                        Dim HDD As String
+                        Chasis = Range("Q" & resultString).Value
+                        USBVGA = Range("R" & resultString).Value
+                        MLB = Range("S" & resultString).Value
+                        CPU = Range("U" & resultString).Value
+                        TPM = Range("V" & resultString).Value
+                        DIMM = Range("W" & resultString).Value
+                        PCI = Range("Y" & resultString).Value
+                        FAN = Range("Z" & resultString).Value
+                        HDD = Range("AA" & resultString).Value
+                        
+                        If InStr(Chasis, "3") > 0 Or InStr(Chasis, "4") > 0 Then
+                            ListBox2.AddItem
+                            ListBox2.List(ListBox2.ListCount - 1, 0) = "1 Chasis"
+                        End If
+                        If InStr(USBVGA, "3") > 0 Or InStr(USBVGA, "4") > 0 Then
+                            ListBox2.AddItem
+                            ListBox2.List(ListBox2.ListCount - 1, 0) = "2 USB/VGA"
+                        End If
+                        If InStr(MLB, "3") > 0 Or InStr(MLB, "4") > 0 Then
+                            ListBox2.AddItem
+                            ListBox2.List(ListBox2.ListCount - 1, 0) = "3 MLB"
+                        End If
+                        If InStr(CPU, "3") > 0 Or InStr(CPU, "4") > 0 Then
+                            ListBox2.AddItem
+                            ListBox2.List(ListBox2.ListCount - 1, 0) = "4 CPU"
+                        End If
+                        If InStr(TPM, "3") > 0 Or InStr(TPM, "4") > 0 Then
+                            ListBox2.AddItem
+                            ListBox2.List(ListBox2.ListCount - 1, 0) = "5 TPM"
+                        End If
+                        If InStr(DIMM, "3") > 0 Or InStr(DIMM, "4") > 0 Then
+                            ListBox2.AddItem
+                            ListBox2.List(ListBox2.ListCount - 1, 0) = "6 DIMM"
+                        End If
+                        If InStr(PCI, "3") > 0 Or InStr(PCI, "4") > 0 Then
+                            ListBox2.AddItem
+                            ListBox2.List(ListBox2.ListCount - 1, 0) = "7 PCI"
+                        End If
+                        If InStr(FAN, "3") > 0 Or InStr(FAN, "4") > 0 Then
+                            ListBox2.AddItem
+                            ListBox2.List(ListBox2.ListCount - 1, 0) = "8 FAN"
+                        End If
+                        If InStr(HDD, "3") > 0 Or InStr(HDD, "4") > 0 Then
+                            ListBox2.AddItem
+                            ListBox2.List(ListBox2.ListCount - 1, 0) = "9 HDD"
+                        End If
+                End If
+                
+        Next aCell
+End Sub
+
+Private Sub TextBox1_Change()
+
+    Dim searchKey As String
+    Dim resultString As String
+    Dim ID As String
+    Dim Name As String
+    Dim shift As String
+    Dim shiftSelected As String
+    Dim Role As String
+    searchKey = TextBox1.Value
+    Dim RNG As Range
+    Dim aCell As Range
+    shiftSelected = ComboBox1.Value
+    
+        ListBox1.Clear 'set the range to be the second column of the table
+        Set RNG = Sheets("Main Time Table").ListObjects("Table1").ListColumns("Num Reloj").DataBodyRange
+        For Each aCell In RNG.Cells
+                result = Split(aCell.Address, "$")
+                For Each wrd In result
+                    resultString = wrd
+                Next wrd
+                
+                ID = Range("A" & resultString).Value
+                Name = Range("B" & resultString).Value
+                shift = Range("C" & resultString).Value
+                Role = Range("E" & resultString).Value
+                
+                If InStr(ID, searchKey) > 0 Then
+                
+                    If shiftSelected <> "" Then
+                    
+                        If InStr(shift, shiftSelected) > 0 Then
+                        
+                        ListBox1.AddItem
+                        ListBox1.List(ListBox1.ListCount - 1, 0) = ID
+                        ListBox1.List(ListBox1.ListCount - 1, 1) = Name
+                        ListBox1.List(ListBox1.ListCount - 1, 2) = shift
+                        ListBox1.List(ListBox1.ListCount - 1, 3) = Role
+                        
+                        End If
+                        
+                    Else
+                        ListBox1.AddItem
+                        ListBox1.List(ListBox1.ListCount - 1, 0) = ID
+                        ListBox1.List(ListBox1.ListCount - 1, 1) = Name
+                        ListBox1.List(ListBox1.ListCount - 1, 2) = shift
+                        ListBox1.List(ListBox1.ListCount - 1, 3) = Role
+                    End If
+                End If
+                
+        Next aCell
+        
+End Sub
+
+Private Sub UserForm_Initialize()
+    With ListBox1
+   .ColumnCount = 4
+   .ColumnWidths = "50;190;50;100"
+    End With
+    With ListBox2
+   .ColumnCount = 1
+    End With
+    ComboBox1.List = Array("A", "B", "C", "D")
+End Sub
+
+Private Sub UserForm_Terminate()
+    Sheets("Main").Activate
+End Sub

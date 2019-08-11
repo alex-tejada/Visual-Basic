@@ -1,0 +1,162 @@
+Private Sub ComboBox1_Change()
+
+    Dim searchKey As String
+    Dim resultString As String
+    Dim ID As String
+    Dim Name As String
+    Dim shift As String
+    Dim Role As String
+    Dim shiftSelection As String
+    shiftSelection = ComboBox2.Value
+    searchKey = ComboBox1.Value
+    Dim x() As Variant 'x = Array("One", "Two", "Three")
+    Dim RNG As Range
+    Dim aCell As Range
+    
+    If InStr(searchKey, "Chasis") > 0 Then
+        searchKey = "Assy 1"
+    ElseIf InStr(searchKey, "USB/VGA") > 0 Then
+        searchKey = "Assy 2"
+    ElseIf InStr(searchKey, "MLB") > 0 Then
+        searchKey = "MLB"
+    ElseIf InStr(searchKey, "CPU") > 0 Then
+        searchKey = "Assy 4 CPU"
+    ElseIf InStr(searchKey, "TPM") > 0 Then
+        searchKey = "Assy 5"
+    ElseIf InStr(searchKey, "DIMM") > 0 Then
+        searchKey = "Assy 6"
+    ElseIf InStr(searchKey, "PCI") > 0 Then
+        searchKey = "Assy 7"
+    ElseIf InStr(searchKey, "FAN") > 0 Then
+        searchKey = "Assy 8"
+    Else
+        searchKey = "HDD Kitting"
+    End If
+    
+    If InStr(searchKey, "--") > 0 Then
+        MsgBox "Seleccione un certificado"
+        
+    Else
+        ListBox1.Clear 'set the range to be the second column of the table
+        Set RNG = Sheets("Main Time Table").ListObjects("Table1").ListColumns(searchKey).DataBodyRange
+        For Each aCell In RNG.Cells
+            If aCell.Value >= 3 And aCell.Value <= 4 Then
+                result = Split(aCell.Address, "$")
+                For Each wrd In result
+                    resultString = wrd
+                Next wrd
+                
+                ID = Range("A" & resultString).Value
+                Name = Range("B" & resultString).Value
+                shift = Range("C" & resultString).Value
+                Role = Range("E" & resultString).Value
+                
+                If Not shiftSelection = "" Then
+                    If InStr(shift, shiftSelection) > 0 Then
+                        ListBox1.AddItem
+                        ListBox1.List(ListBox1.ListCount - 1, 0) = ID
+                        ListBox1.List(ListBox1.ListCount - 1, 1) = Name
+                        ListBox1.List(ListBox1.ListCount - 1, 2) = shift
+                        ListBox1.List(ListBox1.ListCount - 1, 3) = Role
+                    End If
+                Else
+                    ListBox1.AddItem
+                    ListBox1.List(ListBox1.ListCount - 1, 0) = ID
+                    ListBox1.List(ListBox1.ListCount - 1, 1) = Name
+                    ListBox1.List(ListBox1.ListCount - 1, 2) = shift
+                    ListBox1.List(ListBox1.ListCount - 1, 3) = Role
+                End If
+                
+                
+            End If
+        Next aCell
+    End If
+End Sub
+
+Private Sub ComboBox2_Change()
+    
+    Dim searchKey As String
+    Dim resultString As String
+    Dim ID As String
+    Dim Name As String
+    Dim shift As String
+    Dim Role As String
+    Dim cert As String
+    Dim shiftSelection As String
+    shiftSelection = ComboBox2.Value
+    cert = ComboBox1.Value
+    Dim x() As Variant
+    'x = Array("One", "Two", "Three")
+    Dim RNG As Range
+    Dim aCell As Range
+    
+    ListBox1.Clear
+    'set the range to be the second column of the table
+    
+    If cert <> "" Then
+        searchKey = cert
+        
+        If InStr(searchKey, "Chasis") > 0 Then
+            searchKey = "Assy 1"
+        ElseIf InStr(searchKey, "USB/VGA") > 0 Then
+            searchKey = "Assy 2"
+        ElseIf InStr(searchKey, "MLB") > 0 Then
+            searchKey = "MLB"
+        ElseIf InStr(searchKey, "CPU") > 0 Then
+            searchKey = "Assy 4 CPU"
+        ElseIf InStr(searchKey, "TPM") > 0 Then
+            searchKey = "Assy 5"
+        ElseIf InStr(searchKey, "DIMM") > 0 Then
+            searchKey = "Assy 6"
+        ElseIf InStr(searchKey, "PCI") > 0 Then
+            searchKey = "Assy 7"
+        ElseIf InStr(searchKey, "FAN") > 0 Then
+            searchKey = "Assy 8"
+        Else
+            searchKey = "HDD Kitting"
+        End If
+    Else
+        searchKey = "Turno"
+    End If
+    
+    Set RNG = Sheets("Main Time Table").ListObjects("Table1").ListColumns(searchKey).DataBodyRange
+    For Each aCell In RNG.Cells
+            result = Split(aCell.Address, "$")
+            For Each wrd In result
+                resultString = wrd
+            Next wrd
+            
+            ID = Range("A" & resultString).Value
+            Name = Range("B" & resultString).Value
+            shift = Range("C" & resultString).Value
+            Role = Range("E" & resultString).Value
+            
+            If InStr(shift, shiftSelection) > 0 Then
+                If aCell.Value >= 3 And aCell.Value <= 4 Then
+                    
+                    ListBox1.AddItem
+                    ListBox1.List(ListBox1.ListCount - 1, 0) = ID
+                    ListBox1.List(ListBox1.ListCount - 1, 1) = Name
+                    ListBox1.List(ListBox1.ListCount - 1, 2) = shift
+                    ListBox1.List(ListBox1.ListCount - 1, 3) = Role
+                    
+                End If
+            End If
+            
+    Next aCell
+End Sub
+
+Private Sub Image1_Click()
+
+End Sub
+
+Private Sub UserForm_Initialize()
+  Label1.Caption = "Line " + tittle
+  ComboBox1.List = Array("1 Chasis", "2 USB/VGA", "3 MLB", "4 CPU", "5 TPM", "6 DIMM", "7 PCI", "8 FAN", "9 HDD")
+  ComboBox2.List = Array("A", "B", "C", "D")
+  With ListBox1
+   .ColumnCount = 4
+   .ColumnWidths = "50;190;50;100"
+   .MultiSelect = fmMultiSelectMulti
+    End With
+End Sub
